@@ -7,6 +7,7 @@ var countrysSchema = new Schema({
 	descript:String,
     states:[{type: mongoose.Schema.Types.ObjectId, ref: 'states'}],
     createdAt: {type:Date,default:Date.now},
+    order:{type:Number,default:1},
     updatedAt: Date
 })
 

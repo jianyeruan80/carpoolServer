@@ -3,12 +3,19 @@ var express = require('express'),
     router = express.Router(),
     log = require('../modules/logs'),
     security = require('../modules/security'),
-    towns = require('../models/towns');
+    towns = require('../models/towns'),
+    citys = require('../models/citys');
     
 router.get('/', function(req, res, next) {
-       var info=req.query;
-       
-       towns.find({}, function (err, data) {
+      log.debug(req.token);
+         towns.aggregate([
+                     { $lookup:  {
+       from: "villages",
+       localField: "_id",
+       foreignField: "town",
+       as: "villages"
+     }}
+             ]).exec(function (err, data) {
         if (err) return next(err);
           res.json(data);
       });
@@ -17,9 +24,14 @@ router.get('/', function(req, res, next) {
 router.post('/',  security.ensureAuthorized,function(req, res, next) {
    var info=req.body;
   var arvind = new towns(info);
-   towns.save(function (err, data) {
+   arvind.save(function (err, data) {
    if (err) return next(err);
-          res.json(data);
+           var query={"_id":data.city};
+           var update={ $addToSet: {towns: data._id } };
+            citys.findOneAndUpdate(query,update,{},function (err, data2) {
+                  if (err) return next(err);
+                   res.json(data);
+            });
       });
 })
 router.put('/:id',  security.ensureAuthorized,function(req, res, next) {
@@ -30,50 +42,36 @@ var query = {"_id": id};
 var options = {new: true};
 towns.findOneAndUpdate(query,info,options,function (err, data) {
           if (err) return next(err);
-          res.json(data);
+            var query={"_id":info.city};
+            var update={ $addToSet: {towns: data._id } };
+          if(info.city != data.city){
+               citys.findOneAndUpdate(query,update,{},function (err, data2) {
+                  if (err) return next(err);
+                        query={"_id":data.city};
+                        update={ $pull: {towns: data._id } };
+                        citys.findOneAndUpdate(query,update,{},function (err, data2) {
+                            if (err) return next(err);
+                              
+                              res.json(data);
+                        });
+                  
+              });
+            
+         }else{
+            res.json(data);
+          }
     });
 })
 
 router.delete('/:id', security.ensureAuthorized,function(req, res, next) {
-     towns.remove({"_id":req.params.id}, function (err, data) {
+     towns.findByIdAndRemove(req.params.id,function (err, data) {
         if (err) return next(err);
-          res.json(data);
-      });
+            var query={"_id":data.city};
+            var update={ $pull: {towns: data._id } };
+            citys.findOneAndUpdate(query,update,{},function (err, data2) {
+                  if (err) return next(err);
+                    res.json(data);
+            });
+        });
 });
-
 module.exports = router;
-
-/*
-var PersonSchema = new Schema({
-      name:{
-        first:String,
-        last:String
-      }
-    });
-  PersonSchema.virtual('name.full').get(function(){
-      return this.name.first + ' ' + this.name.last;
-    });
-
-Post.find({}).sort('test').exec(function(err, docs) { ... });
-Post.find({}).sort({test: 1}).exec(function(err, docs) { ... });
-Post.find({}, null, {sort: {date: 1}}, function(err, docs) { ... });
-Post.find({}, null, {sort: [['date', -1]]}, function(err, docs) { ... });
-
-db.inventory.aggregate( [ { $unwind: "$sizes" } ] )
-db.inventory.aggregate( [ { $unwind: { path: "$sizes", includeArrayIndex: "arrayIndex" } } ] )
-https://docs.mongodb.com/manual/reference/operator/aggregation/group/
-[
-   /*{ $project : { title : 1 , author : 1 } } addToSet*/
-/*    { $match: { status: "A" } },*
- { $group : {_id : "$permission_group", perms:{$push:{"subject":"$subject","action":"$action","perm":"$perm","status":"$status","value":"$_id","key":"$perm"} } } }
-  // _id : { month: "$permission_group", day: { $dayOfMonth: "$date" }, year: { $year: "$date" } }
-
-  /*    {
-        $group : {
-          _id:{permissionGroup:"$permission_group",subjects:{$push:"$subject"}}
-         
-    sort({"order" : 1})
-        }
-      }*/
-/*users.update({"_id":key},{"$addToSet":{"permissions":{"$each":info.value}}},function(err,data){*/
-

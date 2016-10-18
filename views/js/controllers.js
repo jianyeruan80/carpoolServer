@@ -1,10 +1,10 @@
-  angular.module('server.controllers', [])
+  angular.module('carpool.controllers', [])
 .filter('special', function() {
             return function(data, scope,customerxx) {
                 return data.length;             
             }
 })
-.controller('AppCtrl', function($scope, $ionicModal, $timeout,$http,$ionicModal,$location,$ionicPopup,CONFIG) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout,$http,$ionicModal,$location,$ionicPopup,CONFIG,api) {
   $scope.returnData={}; //
   $scope.config={};
   $scope.userData={};
@@ -16,8 +16,6 @@
   $scope.chainStore={};
   $scope.chainStores=[];
 
-/*  $scope.settingGroups=[];
-  $scope.settingInputType=[{"id":"INPUT"},{"id":"CHECKBOX"},{"id":"RADIO"},{"id":"CHECKBOXJSON"},{"id":"RADIOJSON"}];*/
   $scope.appData={};
   $scope.appData.seqs=[];
   $scope.appData.seq={};
@@ -51,10 +49,7 @@
   $scope.modalSeq.hide();};
 
 
-/* $ionicModal.fromTemplateUrl('templates/checkModal.html', {scope: $scope,animation: 'slide-in-up'}).then(function(modal) {$scope.checkModal = modal;});
- $scope.openCheckModal = function() {$scope.checkModal.show();};
- $scope.closeCheckModal = function() {$scope.checkModal.hide();};
-*/
+
 
    $scope.exit=function(){
       CONFIG.info={};
@@ -70,8 +65,6 @@
           $scope.openPermModal();break;
           case "Chain":
           $scope.chainStore={}; 
-         // $scope.setting.inputType="INPUT";
-
           if(index>=0) $scope.chainStore=angular.copy($scope.chainStores[index]);
           $scope.openChainModal();break;
            case "Setting":
@@ -152,6 +145,11 @@
     }
 
     $scope.getPerms=function(){
+
+
+
+
+
     var currentUrl=CONFIG.url+"perms";
         $http({ method:"GET",url: currentUrl, 
               headers: { 'Content-Type': 'application/json; charset=UTF-8', Authorization: "Bearer "+CONFIG.info.accessToken},
@@ -217,51 +215,27 @@
      
         
   }   
-     $scope.getSeqs=function(){
-      
 
-      var currentUrl=CONFIG.url+"seqs";
-       
-       $http({ method:"GET",url: currentUrl, 
-        headers: { 'Content-Type': 'application/json; charset=UTF-8', Authorization: "Bearer "+CONFIG.info.accessToken},
-        
-        }).success(function(data){
-          
-            $scope.appData.seqs=data;
-           
-          
-     }).error(function(err){
-         $scope.error(err.message);
-     })
-     
-        
-  }   
+
+ $scope.getSeqs=function(){
+      var currentUrl="seqs",method="GET";
+       api.request(method,currentUrl,{}).then(function(data){
+           $scope.appData.seqs=data;
+    })
+ }   
   $scope.getSeqs();
-
-     $scope.seqUpdate=function(){
-         
-         var currentUrl=CONFIG.url+"seqs";
-        
-          var method="POST";
-          if($scope.appData.seq._id){
-            var currentUrl=CONFIG.url+"seqs/"+$scope.appData.seq._id;
+  $scope.seqUpdate=function(){
+         var currentUrl="seqs",method="POST";
+         if($scope.appData.seq._id){
+            currentUrl="seqs/"+$scope.appData.seq._id;
             method="PUT";
-          }
-          console.log($scope.appData.seq)
-          $http({ method:method,url: currentUrl, 
-          headers: { 'Content-Type': 'application/json; charset=UTF-8', Authorization: "Bearer "+CONFIG.info.accessToken},
-          data:$scope.appData.seq
-          }).success(function(data){
+         }
+         api.request(method,currentUrl,$scope.appData.seq).then(function(data){
              $scope.closeSeq();
              $scope.getSeqs();
-         //   $scope.getPerms();
-           // $scope.closePermModal();
-          
-       }).error(function(err){
-              $scope.error(err.message);
-         });
+       })
 
-     }  
+  }  
      $scope.permUpdate=function(){
         var currentUrl=CONFIG.url+"perms";
         var method="POST";

@@ -5,10 +5,7 @@ var express = require('express'),
     security = require('../modules/security'),
     countrys = require('../models/countrys'),
     states = require('../models/states');
-    
-
-
-router.get('/', function(req, res, next) {
+    router.get('/', function(req, res, next) {
       log.debug(req.token);
          states.aggregate([
                      { $lookup:  {
@@ -29,9 +26,7 @@ router.post('/',  security.ensureAuthorized,function(req, res, next) {
    arvind.save(function (err, data) {
    if (err) return next(err);
            var query={"_id":data.country};
-           console.log(query);
-            
-            var update={ $addToSet: {states: data._id } };
+           var update={ $addToSet: {states: data._id } };
             countrys.findOneAndUpdate(query,update,{},function (err, data2) {
                   if (err) return next(err);
                    res.json(data);
@@ -61,8 +56,7 @@ states.findOneAndUpdate(query,info,options,function (err, data) {
                   
               });
             
-
-          }else{
+         }else{
             res.json(data);
           }
     });

@@ -5,8 +5,9 @@ var statesSchema = new Schema({
   name:String,
   abbreviation:String,
   descript:String,
+  order:{type:Number,default:1},
   country:{type: mongoose.Schema.Types.ObjectId, ref: 'countrys'},
-  states:[{type: mongoose.Schema.Types.ObjectId, ref: 'citys'}],
+  citys:[{type: mongoose.Schema.Types.ObjectId, ref: 'citys'}],
    createdAt: {type:Date,default:Date.now},
     updatedAt: Date
 })

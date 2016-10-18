@@ -19,7 +19,9 @@
     "mongoose-schematypes-extend": "^0.3.2",
     "morgan": "~1.6.1",
     "multer": "^1.1.0",
+    "multiparty": "^4.1.2",
     "nodemailer": "^2.5.0",
+    "restler": "^3.4.0",
     "serve-favicon": "~2.3.0",
     "winston": "^2.2.0",
     "winston-daily-rotate-file": "^1.1.4"

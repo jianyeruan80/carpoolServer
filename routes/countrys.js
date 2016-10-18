@@ -4,7 +4,27 @@ var express = require('express'),
     log = require('../modules/logs'),
     security = require('../modules/security'),
     countrys = require('../models/countrys');
-    
+ //populate:[{ path: 'towns'}]
+router.get('/menus', function(req, res, next) {
+      
+  var query={}
+   countrys.find(query).populate(
+             {
+              path: 'states',
+              populate: [{ path: 'citys',populate:[{ path: 'towns',populate:[{ path: 'villages'}],sort:{order:1}}],sort:{order:1},}],
+              sort:{order:1},
+           /*   match: {status:true}, 
+              options: { sort: { order: 1 }}*/
+              }
+            ).sort({order:1}).exec(function(err, data) {    
+                console.log(data);
+                  res.json(data);
+
+            })
+
+});
+
+
 router.get('/', function(req, res, next) {
        log.debug(req.token);
          countrys.aggregate([
