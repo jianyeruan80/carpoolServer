@@ -26,7 +26,8 @@ var contentsSchema = new Schema({
   departureTime:Date,
 
   tripSite:[String],
-  user:{type: mongoose.Schema.Types.ObjectId, ref: 'users'},
+  customer:{type: mongoose.Schema.Types.ObjectId, ref: 'customers'},
+
   createdAt: {type:Date,default:Date.now},
   updatedAt: Date,
   status:{type:Boolean,default:false},

@@ -10,7 +10,10 @@ var express = require('express'),
 
 router.post('/',  security.ensureAuthorized,function(req, res, next) {
    var info=req.body;
+   info.customer=req.token.id;
+   info.updatedAt=new Date();
    var arvind = new centents(info);
+
    arvind.save(function (err, data) {
    if (err) return next(err);
           

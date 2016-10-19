@@ -15,7 +15,7 @@ var addressSchema = new Schema({
 });
 
 var customersSchema = new mongoose.Schema({ 
-    merchantId:{type:String,uppercase: true, trim: true},
+    /*merchantId:{type:String,uppercase: true, trim: true},*/
     account:String,
     firstName:String,
   	lastName:String,
@@ -44,7 +44,7 @@ var customersSchema = new mongoose.Schema({
          description:lauguagesSchema
     },
 });
-customersSchema.index({ email: 1 ,merchantId:1}, { unique: true,sparse:true });
+customersSchema.index({ email: 1 }, { unique: true,sparse:true });
 
 module.exports = mongoose.model('customers', customersSchema);
 

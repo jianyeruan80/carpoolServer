@@ -133,7 +133,7 @@ var form = new multiparty.Form({uploadDir:  photoPath});
  })
 
  var customerError={
-         "11000":"duplicate key error",
+         "11000":"Email already exists",
          "90001":"token not match",
          "90002":"user password is not match",
          "90003":"User Type not match",

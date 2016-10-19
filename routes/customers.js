@@ -3,6 +3,8 @@ var express = require('express'),
     router = express.Router(),
     log = require('../modules/logs'),
     security = require('../modules/security'),
+    md5 = require('md5'),
+    jwt = require('jsonwebtoken'),
     customers = require('../models/customers');
     
 router.get('/', function(req, res, next) {
@@ -61,20 +63,34 @@ router.get('/:id', security.ensureAuthorized,function(req, res, next) {
      
 });
 
-router.post('/',  security.ensureAuthorized,function(req, res, next) {
-  var info=req.body;
-
-   
-   info.merchantId=req.token.merchantId; 
-      info.operator={};
-info.operator.id=req.token.id;
-info.operator.user=req.token.user;
-
-   var arvind = new customers(info);
+router.post('/register',  function(req, res, next) {
+    var info=req.body;
+    var query={};
+    query.email=info.email;
+    query.password=security.encrypt(md5(info.password));
+ 
+   var arvind = new customers(query);
    arvind.save(function (err, data) {
    if (err) return next(err);
           res.json(data);
       });
+})
+router.post('/login',  function(req, res, next) {
+
+      var info=req.body;
+     var query={"email":info.email,"password":security.encrypt(md5(info.password))};
+
+       customers.find(query, function (err, data) {
+        if (err) return next(err);
+
+           var accessToken = jwt.sign({"id":data._id,"email":data.email,"password":info.password},req.app.get("superSecret"), {
+          expiresIn: '120m',
+          algorithm: 'HS256'
+          });
+           var returnJson={"accessToken":accessToken,"email":data.email};
+
+           res.json(returnJson);
+        })
 })
 router.put('/:id',  security.ensureAuthorized,function(req, res, next) {
 var info=req.body;
