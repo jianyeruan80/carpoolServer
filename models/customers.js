@@ -8,6 +8,7 @@ var lauguagesSchema = new Schema({
 
 var addressSchema = new Schema({
       address: String,
+      country:String,
       city: String,
       state: String,
       zipcode: String,
@@ -16,9 +17,9 @@ var addressSchema = new Schema({
 
 var customersSchema = new mongoose.Schema({ 
     /*merchantId:{type:String,uppercase: true, trim: true},*/
+    picture:String,
     account:String,
-    firstName:String,
-  	lastName:String,
+    contact:String,
 	  birthDay:Date,
 	  addressInfo:[addressSchema],
 	  phoneNum1:String,

@@ -80,10 +80,11 @@ router.post('/login',  function(req, res, next) {
       var info=req.body;
      var query={"email":info.email,"password":security.encrypt(md5(info.password))};
 
-       customers.find(query, function (err, data) {
+       customers.findOne(query, function (err, data) {
         if (err) return next(err);
+        if(!data){return next({"code":"90002"})}
 
-           var accessToken = jwt.sign({"id":data._id,"email":data.email,"password":info.password},req.app.get("superSecret"), {
+          var accessToken = jwt.sign({"id":data._id,"email":data.email,"password":info.password},req.app.get("superSecret"), {
           expiresIn: '120m',
           algorithm: 'HS256'
           });

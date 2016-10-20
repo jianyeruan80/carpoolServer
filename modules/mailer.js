@@ -56,4 +56,4 @@ var sendPasswordResetEmail = function(emailAddress, authKey) {
         	console.log(res);
 	 });
 };
-sendPasswordResetEmail("jianyeruan@gmail.com","test");
+//sendPasswordResetEmail("jianyeruan@gmail.com","test");
