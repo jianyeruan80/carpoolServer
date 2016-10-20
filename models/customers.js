@@ -21,7 +21,7 @@ var customersSchema = new mongoose.Schema({
     account:String,
     contact:String,
 	  birthDay:Date,
-	  addressInfo:[addressSchema],
+	  addressInfo:addressSchema,
 	  phoneNum1:String,
 	  phoneNum2:String,
 	  email:{type:String,lowercase:true},

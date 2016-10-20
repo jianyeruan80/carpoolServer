@@ -23,6 +23,7 @@ var towns = require('./routes/towns');
 var villages = require('./routes/villages');
 var licenses = require('./routes/licenses');
 var seqs = require('./routes/seqs');
+var contents = require('./routes/contents');
 var ejs = require('ejs');
 var multiparty = require('multiparty');
 var log=require('./modules/logs');
@@ -83,6 +84,7 @@ app.use('/api/categorys', categorys);
 app.use('/api/items', items);
 app.use('/api/orders', orders);
 app.use('/api/licenses', licenses);
+app.use('/api/contents', contents);
 
 
 /*app.use('/api/background', background);*/

@@ -4,7 +4,7 @@ var express = require('express'),
     log = require('../modules/logs'),
     security = require('../modules/security'),
     
-    centents = require('../models/centents');
+    contents = require('../models/contents');
     
     
 
@@ -12,7 +12,7 @@ router.post('/',  security.ensureAuthorized,function(req, res, next) {
    var info=req.body;
    info.customer=req.token.id;
    info.updatedAt=new Date();
-   var arvind = new centents(info);
+   var arvind = new contents(info);
 
    arvind.save(function (err, data) {
    if (err) return next(err);
@@ -27,7 +27,7 @@ var id=req.params.id;
 info.updatedAt=new Date();
 var query = {"_id": id};
 var options = {new: true};
-centents.findOneAndUpdate(query,info,options,function (err, data) {
+contents.findOneAndUpdate(query,info,options,function (err, data) {
           if (err) return next(err);
              res.json(data);
     }); 

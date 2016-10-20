@@ -54,9 +54,9 @@ router.get('/query',  security.ensureAuthorized,function(req, res, next) {
          res.json(data);
       });
 })
-router.get('/:id', security.ensureAuthorized,function(req, res, next) {
+router.get('/id', security.ensureAuthorized,function(req, res, next) {
      log.debug(req.token);
-       customers.findById(req.params.id, function (err, data) {
+       customers.findById(req.token.id, function (err, data) {
         if (err) return next(err);
          res.json(data);
       });
@@ -88,21 +88,24 @@ router.post('/login',  function(req, res, next) {
           expiresIn: '120m',
           algorithm: 'HS256'
           });
-           var returnJson={"accessToken":accessToken,"email":data.email};
+           var returnJson={"accessToken":accessToken,"info":data};
 
            res.json(returnJson);
         })
 })
-router.put('/:id',  security.ensureAuthorized,function(req, res, next) {
+router.put('/id',  security.ensureAuthorized,function(req, res, next) {
+  console.log("xxxxxxxxxxxxxxxxxxxxxxx");
 var info=req.body;
-log.debug(info);
-var id=req.params.id;
+
+console.log(info);
+var id=req.token.id;
 info.updated_at=new Date();
 var query = {"_id": id};
+console.log(query);
+console.log("xxxxxxxxxxxxxxxxxxxxxxx");
+
 var options = {new: true};
-   info.operator={};
-info.operator.id=req.token.id;
-info.operator.user=req.token.user;
+ 
  customers.findOneAndUpdate(query,info,options,function (err, data) {
           if (err) return next(err);
           res.json(data);
