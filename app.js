@@ -113,7 +113,7 @@ var  store={};
 
 app.post('/api/uploadPic',security.ensureAuthorized,function(req, res, next) {
 
-var fold=req.token.merchantId;
+var fold=req.token.merchantId || "carpool";
 var photoPath=path.join(__dirname, 'public')+'/'+fold;
 mkdirp(photoPath, function (err) {
     if (err) console.error(err)
