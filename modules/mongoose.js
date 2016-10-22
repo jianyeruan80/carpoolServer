@@ -11,3 +11,4 @@ var dbPort =  '27017';
     }
 });
 module.exports=mongoose;
+/*console.log(util.inspect(result, false, null))*/

@@ -5,7 +5,7 @@ var express = require('express'),
     security = require('../modules/security'),
     countrys = require('../models/countrys'),
     states = require('../models/states');
-    router.get('/', function(req, res, next) {
+router.get('/', function(req, res, next) {
       log.debug(req.token);
          states.aggregate([
                      { $lookup:  {

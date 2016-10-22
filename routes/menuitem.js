@@ -366,7 +366,7 @@ categorys.aggregate([
                          returnData.message.menus=result;
 
                      console.log("-----xxxx----------------------");
-                            console.log(util.inspect(result, false, null))
+                            
 
                        console.log("-----xxxx----------------------");
 

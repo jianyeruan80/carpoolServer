@@ -9,7 +9,7 @@ var citysSchema = new Schema({
   state:{type: mongoose.Schema.Types.ObjectId, ref: 'states'},
   towns:[{type: mongoose.Schema.Types.ObjectId, ref: 'towns'}],
    createdAt: {type:Date,default:Date.now},
-    updateddAt: Date
+   updateddAt: Date
 })
 
 citysSchema.index({ name: 1}, { unique: true,sparse:true});
